@@ -306,10 +306,10 @@ export default function Page() {
           <p className="mt-6 text-sm text-charcoal/60">
             o escribe a{" "}
             <a
-              href="mailto:hola@lazo.agency"
+              href="mailto:info@lazo.agency"
               className="underline decoration-terracotta underline-offset-4 hover:text-sage"
             >
-              hola@lazo.agency
+              info@lazo.agency
             </a>
           </p>
         </div>
@@ -326,7 +326,7 @@ export default function Page() {
             </span>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-charcoal/70">
-            <a href="mailto:hola@lazo.agency" className="hover:text-sage">hola@lazo.agency</a>
+            <a href="mailto:info@lazo.agency" className="hover:text-sage">info@lazo.agency</a>
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-sage">
               WhatsApp
             </a>
