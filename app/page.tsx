@@ -6,6 +6,8 @@ const WHATSAPP_URL =
     "Hola David, vengo de la web de Lazo. Quiero ver cómo automatizaríais mi negocio."
   );
 
+const CAL_URL = "https://cal.eu/lazo-agency/15min";
+
 const CUPOS_TOTALES = 9;
 
 const verticales = [
@@ -164,7 +166,7 @@ export default function Page() {
             Tres verticales. Nada más.
           </p>
           <h2 className="font-display text-sage text-3xl md:text-5xl tracking-tighter2 mb-4 max-w-3xl">
-            Trabajamos solo donde el 80% de los problemas ya los hemos visto.
+            Trabajamos solo con tres verticales para cubrir mejor sus casos típicos.
           </h2>
           <p className="text-charcoal/70 max-w-2xl mb-12">
             Si tu negocio no encaja en uno de estos tres, te lo decimos en la primera llamada.
@@ -248,12 +250,12 @@ export default function Page() {
               </li>
             </ul>
             <a
-              href={WHATSAPP_URL}
+              href={CAL_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-terracotta text-cream px-7 py-4 rounded-full font-medium hover:bg-sage transition-colors"
             >
-              Reservar 20 min con el equipo
+              Reservar 15 min con el equipo
               <span aria-hidden>→</span>
             </a>
           </div>
@@ -288,7 +290,7 @@ export default function Page() {
       <section className="py-20 md:py-28 px-6 md:px-10">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="font-display text-sage text-4xl md:text-6xl tracking-tighter2 mb-6">
-            ¿Hablamos 20 minutos?
+            ¿Hablamos 15 minutos?
           </h2>
           <p className="text-lg text-charcoal/80 mb-10 leading-relaxed">
             Sin presentación corporativa. Te pregunto qué se te escapa hoy y, si encaja, te montamos un
