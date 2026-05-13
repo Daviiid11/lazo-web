@@ -332,6 +332,9 @@ export default function Page() {
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-sage">
               WhatsApp
             </a>
+            <Link href="/legal" className="hover:text-sage">
+              Aviso legal y privacidad
+            </Link>
             <span className="text-charcoal/40">© {new Date().getFullYear()} Lazo</span>
           </div>
         </div>
