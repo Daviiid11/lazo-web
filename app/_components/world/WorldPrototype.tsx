@@ -9,10 +9,11 @@ const WorldCanvas = dynamic(() => import("./WorldCanvas"), { ssr: false });
 const CAL_URL = "https://cal.eu/lazo-agency/15min";
 
 /**
- * Prototipo del "recorrido del cabo" (L1, gate M-C).
- * El mensaje fuga→diagnóstico→CTA se entiende SOLO deslizando, sin explorar
- * nada (regla M-B Parte 2). El 3D es atmósfera detrás del copy en HTML.
- * Si prefers-reduced-motion: no se monta el 3D y el copy queda tal cual.
+ * "El recorrido del cabo" — L2: recorrido completo, 6 estaciones.
+ * Cada estación se entiende fuga→diagnóstico→CTA SOLO deslizando, sin
+ * explorar nada (regla M-B Parte 2). El 3D es atmósfera detrás del copy HTML.
+ * Si prefers-reduced-motion: no se monta el 3D y el copy queda intacto
+ * (fallback = la v2 lineal completa, nunca una página vacía).
  */
 export default function WorldPrototype() {
   const [enabled, setEnabled] = useState(false);
@@ -40,6 +41,7 @@ export default function WorldPrototype() {
       )}
 
       <div className="relative z-10">
+        {/* 1 — Hero */}
         <section className="min-h-screen flex items-center">
           <div className="px-6 md:px-10 max-w-4xl mx-auto">
             <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
@@ -56,8 +58,29 @@ export default function WorldPrototype() {
           </div>
         </section>
 
+        {/* 2 — La fuga */}
         <section className="min-h-screen flex items-center">
           <div className="px-6 md:px-10 max-w-4xl mx-auto">
+            <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
+              La fuga
+            </p>
+            <h2 className="font-display text-sage text-4xl md:text-6xl tracking-tighter2 mb-6">
+              Llamadas sin contestar. Recordatorios que no salen. Huecos que
+              nadie rellena.
+            </h2>
+            <p className="text-lg md:text-xl text-charcoal/80 max-w-2xl leading-relaxed">
+              Cada cabo suelto es un paciente que se va sin aparecer en ninguna
+              métrica. No lo ves porque nunca llegó a entrar.
+            </p>
+          </div>
+        </section>
+
+        {/* 3 — El diagnóstico */}
+        <section className="min-h-screen flex items-center">
+          <div className="px-6 md:px-10 max-w-4xl mx-auto">
+            <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
+              El diagnóstico
+            </p>
             <h2 className="font-display text-sage text-3xl md:text-5xl tracking-tighter2 mb-6">
               No lo tapes a ciegas. Primero, el Diagnóstico de Fuga.
             </h2>
@@ -68,8 +91,45 @@ export default function WorldPrototype() {
           </div>
         </section>
 
+        {/* 4 — La automatización */}
         <section className="min-h-screen flex items-center">
           <div className="px-6 md:px-10 max-w-4xl mx-auto">
+            <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
+              La automatización
+            </p>
+            <h2 className="font-display text-sage text-4xl md:text-6xl tracking-tighter2 mb-6">
+              Después, atamos los cabos uno a uno.
+            </h2>
+            <p className="text-lg text-charcoal/80 max-w-2xl leading-relaxed">
+              Recordatorios, recuperación de huecos, respuesta a primera hora —
+              con IA, integrado con lo que ya usas. Sin cambiar tu forma de
+              trabajar.
+            </p>
+          </div>
+        </section>
+
+        {/* 5 — La prueba */}
+        <section className="min-h-screen flex items-center">
+          <div className="px-6 md:px-10 max-w-4xl mx-auto">
+            <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
+              La prueba
+            </p>
+            <h2 className="font-display text-sage text-4xl md:text-6xl tracking-tighter2 mb-6">
+              Esta web es la demostración.
+            </h2>
+            <p className="text-lg text-charcoal/80 max-w-2xl leading-relaxed">
+              Si dudas de que sepamos automatizar, mira dónde estás leyendo
+              esto. La capacidad se enseña, no se cuenta.
+            </p>
+          </div>
+        </section>
+
+        {/* 6 — El cierre */}
+        <section className="min-h-screen flex items-center">
+          <div className="px-6 md:px-10 max-w-4xl mx-auto">
+            <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
+              El cierre
+            </p>
             <h2 className="font-display text-sage text-4xl md:text-6xl tracking-tighter2 mb-8">
               ¿Cuánto pierde tu clínica ahora mismo?
             </h2>
