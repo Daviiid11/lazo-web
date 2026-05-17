@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "./_components/SmoothScroll";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -61,7 +62,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="font-sans bg-cream text-charcoal antialiased">
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );

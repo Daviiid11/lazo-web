@@ -1,47 +1,34 @@
 import Link from "next/link";
-
-const WHATSAPP_URL =
-  "https://wa.me/34688949417?text=" +
-  encodeURIComponent(
-    "Hola David, vengo de la web de Lazo. Quiero ver cómo automatizaríais mi negocio."
-  );
+import Reveal from "./_components/Reveal";
+import HeroBackdrop from "./_components/HeroBackdrop";
 
 const CAL_URL = "https://cal.eu/lazo-agency/15min";
 
-const CUPOS_TOTALES = 9;
-
-const verticales = [
+const fugas = [
   {
-    nombre: "Clínicas y centros estéticos",
-    leak: "Consultas fuera de horario que llegan al día siguiente y el lead ya se enfrió.",
-    promesa: "Atención 24/7 en WhatsApp + agenda integrada con Doctoralia o el software que ya uses.",
-    setup: "1.325 €",
-    retainer: "375 €/mes",
-    setupEstandar: "2.650 €",
+    n: "01",
+    titulo: "Llamadas perdidas",
+    detalle:
+      "Las que entran fuera de horario, o mientras tu recepción atiende a otro paciente. Casi ninguna se devuelve. Ese paciente ya está llamando a la clínica de al lado.",
   },
   {
-    nombre: "Despachos de abogados",
-    leak: "Llamadas y emails sin filtrar que comen horas del junior antes de saber si hay caso.",
-    promesa: "Cribado de consultas (urgente / no urgente / fuera de ámbito) y enrutamiento al abogado correcto.",
-    setup: "1.750 €",
-    retainer: "550 €/mes",
-    setupEstandar: "3.500 €",
+    n: "02",
+    titulo: "WhatsApp sin responder",
+    detalle:
+      "El primer mensaje llega con ganas. Si tarda horas en contestarse, llega frío. Si llega al día siguiente, ya no llega.",
   },
   {
-    nombre: "Inmobiliarias",
-    leak: "Leads de Idealista o Fotocasa sin cualificar, repartidos a mano y a destiempo.",
-    promesa: "Cualificación automática (zona, presupuesto, urgencia) y reparto al agente correcto.",
-    setup: "1.500 €",
-    retainer: "475 €/mes",
-    setupEstandar: "3.000 €",
+    n: "03",
+    titulo: "Citas sin confirmar",
+    detalle:
+      "Huecos que no se recuperan, recordatorios que no salen, pacientes que no avisan. Cada no-show es una hora de agenda que ya no vuelve.",
   },
-];
-
-const proceso = [
-  { fase: "Auditoría", dias: "Días 1-3", detalle: "Mapeo de tu operativa, accesos a tu CRM y a WhatsApp." },
-  { fase: "Construcción", dias: "Días 4-10", detalle: "Flujos en n8n, prompts adaptados y pruebas con datos reales." },
-  { fase: "Despliegue", dias: "Días 11-21", detalle: "Go-live con monitorización y formación de tu equipo." },
-  { fase: "Medición", dias: "Días 22-30", detalle: "Datos reales, ajustes y primer reporting." },
+  {
+    n: "04",
+    titulo: "Leads de campañas sin seguir",
+    detalle:
+      "Pagas por que te encuentren y luego el formulario o el anuncio se queda sin respuesta. Pagaste dos veces: el anuncio y el paciente que no entró.",
+  },
 ];
 
 function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
@@ -69,256 +56,282 @@ function Wordmark({ className = "" }: { className?: string }) {
   );
 }
 
+function CtaButton({
+  children,
+  variant = "primary",
+  className = "",
+}: {
+  children: React.ReactNode;
+  variant?: "primary" | "ghost";
+  className?: string;
+}) {
+  const base =
+    "inline-flex items-center gap-2 rounded-full px-7 py-4 font-medium transition-colors";
+  const styles =
+    variant === "primary"
+      ? "bg-terracotta text-cream hover:bg-sage"
+      : "text-sage border-2 border-sage/20 hover:border-sage";
+  return (
+    <a
+      href={CAL_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`${base} ${styles} ${className}`}
+    >
+      {children}
+      <span aria-hidden>→</span>
+    </a>
+  );
+}
+
 export default function Page() {
   return (
     <main className="min-h-screen">
-      {/* Nav */}
-      <header className="px-6 md:px-10 py-6 flex items-center justify-between max-w-6xl mx-auto">
-        <Link href="/" className="flex items-center gap-3" aria-label="Lazo, inicio">
-          <LogoMark className="h-7 w-12" />
-          <Wordmark className="text-2xl" />
-        </Link>
-        <a
-          href={WHATSAPP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-sage hover:text-terracotta transition-colors"
-        >
-          Hablar con el equipo →
-        </a>
+      {/* Nav — CTA único persistente */}
+      <header className="sticky top-0 z-50 bg-cream/85 backdrop-blur-sm border-b border-sage/10">
+        <div className="px-6 md:px-10 py-4 flex items-center justify-between max-w-6xl mx-auto">
+          <Link href="/" className="flex items-center gap-3" aria-label="Lazo, inicio">
+            <LogoMark className="h-6 w-11" />
+            <Wordmark className="text-xl" />
+          </Link>
+          <a
+            href={CAL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium rounded-full bg-sage text-cream px-5 py-2.5 hover:bg-terracotta transition-colors"
+          >
+            Reservar diagnóstico
+          </a>
+        </div>
       </header>
 
-      {/* Hero */}
-      <section className="px-6 md:px-10 pt-12 md:pt-24 pb-20 md:pb-32 max-w-5xl mx-auto">
-        <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-6">
-          Agencia de automatización IA · Clínicas · Despachos · Inmobiliarias
-        </p>
+      {/* 00 — Hero */}
+      <section className="relative overflow-hidden">
+        {/* Fondo: fallback estático SSR (no-JS / reduced-motion) + lienzo 3D encima */}
+        <div aria-hidden className="absolute inset-0 z-0">
+          <LogoMark className="absolute -right-24 top-1/2 -translate-y-1/2 h-[26rem] w-auto opacity-[0.06]" />
+          <HeroBackdrop />
+        </div>
+        <div className="relative z-10 px-6 md:px-10 pt-16 md:pt-28 pb-24 md:pb-36 max-w-5xl mx-auto">
+          <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-6">
+            Automatización con IA · Clínicas
+          </p>
         <h1 className="font-display text-sage text-5xl md:text-7xl leading-[1.05] tracking-tighter2 mb-8">
-          Atamos los cabos sueltos<br />
-          <span className="text-terracotta">de tu negocio.</span>
+          Tu clínica pierde pacientes
+          <br />
+          <span className="text-terracotta">que nunca llegas a ver.</span>
         </h1>
         <p className="font-sans text-lg md:text-xl text-charcoal/80 max-w-2xl leading-relaxed mb-10">
-          Hay tiempo que tu negocio pierde en tareas que ni siquiera ves: contestar el mismo WhatsApp,
-          picar facturas, recordar emails que se quedaron sin respuesta. Unimos esos hilos sueltos con IA
-          y los atamos a las herramientas que <em className="not-italic underline decoration-terracotta decoration-2 underline-offset-4">ya usas</em>.
+          Cada llamada que no se devuelve, cada WhatsApp que se enfría, cada cita
+          que no se confirma es un cabo suelto. No te damos la media del sector:
+          medimos los tuyos y te decimos{" "}
+          <em className="not-italic underline decoration-terracotta decoration-2 underline-offset-4">
+            cuánto te cuestan
+          </em>{" "}
+          — antes de tocar nada.
         </p>
         <div className="flex flex-wrap items-center gap-4">
+          <CtaButton>Reservar diagnóstico de fuga</CtaButton>
           <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-sage text-cream px-7 py-4 rounded-full font-medium hover:bg-terracotta transition-colors"
-          >
-            Hablar con el equipo por WhatsApp
-            <span aria-hidden>→</span>
-          </a>
-          <a
-            href="#oferta"
+            href="#fuga"
             className="inline-flex items-center gap-2 px-7 py-4 rounded-full font-medium text-sage border-2 border-sage/20 hover:border-sage transition-colors"
           >
-            Ver oferta de lanzamiento
+            Ver de qué hablamos
           </a>
         </div>
-        <p className="mt-6 text-sm text-charcoal/60">
-          Sin migrar de herramientas. En 30 días funcionando.
-        </p>
-      </section>
-
-      {/* Qué hace Lazo */}
-      <section className="bg-cream-light py-20 md:py-28 px-6 md:px-10">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="font-display text-sage text-3xl md:text-5xl tracking-tighter2 mb-12 max-w-3xl">
-            No te vendemos un chatbot. Te montamos el sistema que tu negocio ya debería tener.
-          </h2>
-          <div className="grid md:grid-cols-3 gap-10">
-            <div>
-              <div className="text-terracotta font-display text-4xl mb-3">01</div>
-              <h3 className="font-display text-2xl text-sage mb-3">Atención 24/7</h3>
-              <p className="text-charcoal/80 leading-relaxed">
-                Un asistente IA contesta consultas repetidas en WhatsApp. Lo que no sabe, te lo escala con
-                contexto ya preparado.
-              </p>
-            </div>
-            <div>
-              <div className="text-terracotta font-display text-4xl mb-3">02</div>
-              <h3 className="font-display text-2xl text-sage mb-3">Captura de leads</h3>
-              <p className="text-charcoal/80 leading-relaxed">
-                Cada conversación queda registrada con datos limpios en tu CRM. Nada se pierde por estar en
-                otra app.
-              </p>
-            </div>
-            <div>
-              <div className="text-terracotta font-display text-4xl mb-3">03</div>
-              <h3 className="font-display text-2xl text-sage mb-3">Seguimiento automático</h3>
-              <p className="text-charcoal/80 leading-relaxed">
-                Recordatorios, confirmaciones y mensajes de "¿sigues interesado?" según tu proceso real, no
-                plantillas genéricas.
-              </p>
-            </div>
-          </div>
+          <p className="mt-6 text-sm text-charcoal/60">
+            15 minutos. Sin presentación corporativa. Sin compromiso de contratar nada.
+          </p>
         </div>
       </section>
 
-      {/* Verticales */}
-      <section className="py-20 md:py-28 px-6 md:px-10">
+      {/* 01 — La fuga */}
+      <section id="fuga" className="bg-cream-light py-20 md:py-28 px-6 md:px-10">
         <div className="max-w-5xl mx-auto">
-          <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-4">
-            Tres verticales. Nada más.
-          </p>
-          <h2 className="font-display text-sage text-3xl md:text-5xl tracking-tighter2 mb-4 max-w-3xl">
-            Trabajamos solo con tres verticales para cubrir mejor sus casos típicos.
-          </h2>
-          <p className="text-charcoal/70 max-w-2xl mb-12">
-            Si tu negocio no encaja en uno de estos tres, te lo decimos en la primera llamada.
-          </p>
-          <div className="grid md:grid-cols-3 gap-6">
-            {verticales.map((v) => (
-              <article
-                key={v.nombre}
-                className="bg-cream-light rounded-2xl p-7 flex flex-col gap-4 border border-sage/10"
-              >
-                <h3 className="font-display text-2xl text-sage leading-tight">{v.nombre}</h3>
-                <p className="text-sm text-charcoal/70 italic">"{v.leak}"</p>
-                <p className="text-charcoal/85 leading-relaxed flex-1">{v.promesa}</p>
-                <div className="pt-4 border-t border-sage/10">
-                  <p className="text-xs uppercase tracking-widest text-sage/60 mb-1">Oferta lanzamiento</p>
-                  <p className="font-display text-2xl text-sage">
-                    {v.setup} <span className="text-base text-charcoal/60">setup</span>
-                  </p>
-                  <p className="text-sm text-charcoal/70">
-                    + {v.retainer}
-                    <span className="block text-xs text-charcoal/50 mt-1">
-                      Estándar: {v.setupEstandar} · 50% off setup primeros 3 cupos
-                    </span>
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Proceso 30 días */}
-      <section className="bg-sage text-cream py-20 md:py-28 px-6 md:px-10">
-        <div className="max-w-5xl mx-auto">
-          <p className="font-sans text-sm uppercase tracking-widest text-cream/60 mb-4">
-            Cómo funciona
-          </p>
-          <h2 className="font-display text-3xl md:text-5xl tracking-tighter2 mb-12 max-w-3xl">
-            En 30 días pasamos de auditoría a sistema vivo en tu negocio.
-          </h2>
-          <ol className="grid md:grid-cols-4 gap-6">
-            {proceso.map((p, i) => (
-              <li key={p.fase} className="border-t border-cream/20 pt-5">
-                <p className="text-terracotta font-display text-3xl mb-2">0{i + 1}</p>
-                <p className="text-xs uppercase tracking-widest text-cream/60 mb-1">{p.dias}</p>
-                <h3 className="font-display text-xl mb-2">{p.fase}</h3>
-                <p className="text-cream/80 text-sm leading-relaxed">{p.detalle}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* Oferta lanzamiento */}
-      <section id="oferta" className="py-20 md:py-28 px-6 md:px-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-cream-light border-2 border-terracotta/30 rounded-3xl p-8 md:p-14">
-            <p className="font-sans text-sm uppercase tracking-widest text-terracotta mb-4">
-              Oferta de lanzamiento · {CUPOS_TOTALES} cupos totales
+          <Reveal>
+            <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-4">
+              El problema
             </p>
-            <h2 className="font-display text-sage text-3xl md:text-5xl tracking-tighter2 mb-6">
-              Los primeros 3 clientes de cada vertical pagan la mitad del setup.
+            <h2 className="font-display text-sage text-3xl md:text-5xl tracking-tighter2 mb-6 max-w-3xl">
+              La fuga no aparece en ninguna hoja de cálculo.
             </h2>
-            <p className="text-lg text-charcoal/80 mb-8 leading-relaxed">
-              A cambio te pedimos un testimonio en vídeo a los 60 días, un caso de éxito documentado y
-              permiso para usar tu logo. Si en 60 días los resultados no justifican el testimonio, no lo
-              grabamos. Sin penalización.
+            <p className="text-charcoal/70 max-w-2xl mb-14 leading-relaxed">
+              No es un agujero, son cuatro grietas pequeñas que nadie suma. Cada
+              una parece tolerable. Juntas, son la facturación de un mes.
             </p>
-            <ul className="space-y-3 mb-10 text-charcoal/85">
+          </Reveal>
+          <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
+            {fugas.map((f, i) => (
+              <Reveal
+                key={f.n}
+                delay={i * 0.08}
+                className="border-t border-sage/15 pt-5"
+              >
+                <span className="font-display text-terracotta text-3xl">
+                  {f.n}
+                </span>
+                <h3 className="font-display text-2xl text-sage mt-2 mb-3">
+                  {f.titulo}
+                </h3>
+                <p className="text-charcoal/80 leading-relaxed">{f.detalle}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 02 — El diagnóstico (la cuña) */}
+      <section className="py-20 md:py-32 px-6 md:px-10">
+        <div className="max-w-5xl mx-auto">
+          <Reveal>
+            <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-4">
+              El primer paso
+            </p>
+            <h2 className="font-display text-sage text-3xl md:text-5xl tracking-tighter2 mb-6 max-w-3xl">
+              No lo tapes a ciegas. Primero, el Diagnóstico de Fuga.
+            </h2>
+            <p className="text-lg text-charcoal/80 max-w-2xl mb-10 leading-relaxed">
+              Medimos tus cuatro fugas con datos reales de tu clínica — no con
+              medias del sector. Te entregamos cuánto pierdes al mes, qué grieta
+              cuesta más y por dónde se tapa primero. En un documento, en una
+              llamada de 20 minutos.
+            </p>
+            <ul className="space-y-4 mb-12 text-charcoal/85 max-w-2xl">
               <li className="flex items-start gap-3">
-                <span className="text-terracotta font-display text-xl leading-none mt-1">·</span>
-                <span>50% off solo en el setup. El retainer mensual se mantiene.</span>
+                <span className="text-terracotta font-display text-xl leading-none mt-1">
+                  ·
+                </span>
+                <span>
+                  Lo medimos nosotros: probamos tu clínica como lo haría un
+                  paciente y revisamos tu operativa contigo.
+                </span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-terracotta font-display text-xl leading-none mt-1">·</span>
-                <span>Compromiso de retainer de 6 meses (paga el resto si cancelas antes).</span>
+                <span className="text-terracotta font-display text-xl leading-none mt-1">
+                  ·
+                </span>
+                <span>
+                  Te llevas el diagnóstico aunque no contrates nada después. Es
+                  tuyo.
+                </span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-terracotta font-display text-xl leading-none mt-1">·</span>
-                <span>Cupo se reserva al firmar, no antes. Sin lista de espera ficticia.</span>
+                <span className="text-terracotta font-display text-xl leading-none mt-1">
+                  ·
+                </span>
+                <span>Precio cerrado. Sin propuesta de 40 páginas.</span>
               </li>
             </ul>
-            <a
-              href={CAL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-terracotta text-cream px-7 py-4 rounded-full font-medium hover:bg-sage transition-colors"
-            >
-              Reservar 15 min con el equipo
-              <span aria-hidden>→</span>
-            </a>
-          </div>
+            <CtaButton>Reservar mi diagnóstico</CtaButton>
+          </Reveal>
         </div>
       </section>
 
-      {/* Stack / confianza */}
-      <section className="py-16 md:py-20 px-6 md:px-10 border-t border-sage/10">
+      {/* 03 — La automatización */}
+      <section className="bg-sage text-cream py-20 md:py-28 px-6 md:px-10">
         <div className="max-w-5xl mx-auto">
-          <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-6 text-center">
-            Cómo lo construimos
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-charcoal/60 font-display text-xl md:text-2xl">
-            <span>Claude</span>
-            <span className="text-terracotta">·</span>
-            <span>n8n</span>
-            <span className="text-terracotta">·</span>
-            <span>360dialog</span>
-            <span className="text-terracotta">·</span>
-            <span>Cal.com</span>
-            <span className="text-terracotta">·</span>
-            <span>Tu CRM</span>
+          <Reveal>
+            <p className="font-sans text-sm uppercase tracking-widest text-cream/60 mb-4">
+              Y luego
+            </p>
+            <h2 className="font-display text-3xl md:text-5xl tracking-tighter2 mb-6 max-w-3xl">
+              Atamos cada cabo, uno a uno.
+            </h2>
+            <p className="text-cream/85 max-w-2xl mb-12 leading-relaxed text-lg">
+              Cuando sabes dónde pierdes, taparlo deja de ser una corazonada.
+              Montamos solo lo que el diagnóstico justifica — integrado con lo
+              que ya usas, sin migrar de software.
+            </p>
+          </Reveal>
+          <div className="grid md:grid-cols-3 gap-10">
+            {[
+              {
+                t: "Atención que no duerme",
+                d: "WhatsApp y llamadas atendidas 24/7. Lo que la IA no resuelve, te llega con el contexto ya hecho.",
+              },
+              {
+                t: "Agenda que se llena sola",
+                d: "Confirmaciones, recordatorios y recuperación de huecos según tu proceso real, no plantillas genéricas.",
+              },
+              {
+                t: "Ningún lead se cae",
+                d: "Cada conversación queda registrada y seguida en el software que ya tienes. Nada vive en una libreta.",
+              },
+            ].map((c, i) => (
+              <Reveal
+                key={c.t}
+                delay={i * 0.08}
+                className="border-t border-cream/20 pt-5"
+              >
+                <h3 className="font-display text-xl mb-2">{c.t}</h3>
+                <p className="text-cream/80 text-sm leading-relaxed">{c.d}</p>
+              </Reveal>
+            ))}
           </div>
-          <p className="text-center text-sm text-charcoal/60 mt-6 max-w-2xl mx-auto">
-            Datos en servidores europeos. Tu CRM no se toca: nos integramos vía API. Sin lock-in: si te vas,
-            te llevas tus datos.
-          </p>
         </div>
       </section>
 
-      {/* CTA final */}
+      {/* 04 — La prueba */}
       <section className="py-20 md:py-28 px-6 md:px-10">
+        <div className="max-w-5xl mx-auto">
+          <Reveal>
+            <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-4">
+              Por qué creernos
+            </p>
+            <h2 className="font-display text-sage text-3xl md:text-5xl tracking-tighter2 mb-6 max-w-3xl">
+              Esta web es la demostración.
+            </h2>
+            <p className="text-charcoal/80 max-w-2xl mb-12 leading-relaxed text-lg">
+              Lo que ves —cómo se mueve, cómo está construido— lo hacemos
+              nosotros. Si así cuidamos nuestra propia casa, hazte una idea de
+              cómo cuidaremos tu sistema.
+            </p>
+            <div className="flex flex-wrap items-center gap-x-10 gap-y-4 text-charcoal/55 font-display text-xl md:text-2xl mb-6">
+              <span>Claude</span>
+              <span className="text-terracotta">·</span>
+              <span>n8n</span>
+              <span className="text-terracotta">·</span>
+              <span>360dialog</span>
+              <span className="text-terracotta">·</span>
+              <span>Cal.com</span>
+              <span className="text-terracotta">·</span>
+              <span>Tu software</span>
+            </div>
+            <p className="text-sm text-charcoal/60 max-w-2xl">
+              Datos en servidores europeos. Tu software no se toca: nos
+              integramos por API. Sin lock-in: si te vas, te llevas tus datos.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 05 — Cierre / CTA */}
+      <section className="bg-cream-light py-24 md:py-36 px-6 md:px-10">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-display text-sage text-4xl md:text-6xl tracking-tighter2 mb-6">
-            ¿Hablamos 15 minutos?
-          </h2>
-          <p className="text-lg text-charcoal/80 mb-10 leading-relaxed">
-            Sin presentación corporativa. Te pregunto qué se te escapa hoy y, si encaja, te montamos un
-            piloto. Si no encaja, te lo digo en la misma llamada.
-          </p>
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-sage text-cream px-8 py-4 rounded-full font-medium hover:bg-terracotta transition-colors text-lg"
-          >
-            Escribir por WhatsApp
-            <span aria-hidden>→</span>
-          </a>
-          <p className="mt-6 text-sm text-charcoal/60">
-            o escribe a{" "}
-            <a
-              href="mailto:info@lazo.agency"
-              className="underline decoration-terracotta underline-offset-4 hover:text-sage"
-            >
-              info@lazo.agency
-            </a>
-          </p>
+          <Reveal>
+            <h2 className="font-display text-sage text-4xl md:text-6xl tracking-tighter2 mb-6">
+              ¿Cuánto pierde tu clínica ahora mismo?
+            </h2>
+            <p className="text-lg text-charcoal/80 mb-10 leading-relaxed">
+              No lo adivines. En 15 minutos te lo decimos y ponemos en marcha tu
+              diagnóstico. Si no encaja, te lo decimos en la misma llamada.
+            </p>
+            <CtaButton className="text-lg px-8">Reservar diagnóstico</CtaButton>
+            <p className="mt-6 text-sm text-charcoal/60">
+              o escribe a{" "}
+              <a
+                href="mailto:hola@lazo.agency"
+                className="underline decoration-terracotta underline-offset-4 hover:text-sage"
+              >
+                hola@lazo.agency
+              </a>
+            </p>
+          </Reveal>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-cream-light px-6 md:px-10 py-10 border-t border-sage/10">
+      <footer className="px-6 md:px-10 py-10 border-t border-sage/10">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <LogoMark className="h-6 w-10" />
@@ -328,14 +341,15 @@ export default function Page() {
             </span>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-charcoal/70">
-            <a href="mailto:info@lazo.agency" className="hover:text-sage">info@lazo.agency</a>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-sage">
-              WhatsApp
+            <a href="mailto:hola@lazo.agency" className="hover:text-sage">
+              hola@lazo.agency
             </a>
             <Link href="/legal" className="hover:text-sage">
               Aviso legal y privacidad
             </Link>
-            <span className="text-charcoal/40">© {new Date().getFullYear()} Lazo</span>
+            <span className="text-charcoal/40">
+              © {new Date().getFullYear()} Lazo
+            </span>
           </div>
         </div>
       </footer>
