@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -56,8 +56,10 @@ function Cord({
 /**
  * La cámara recorre las 6 estaciones según el scroll. Render ON-DEMAND:
  * solo se dibuja al hacer scroll (invalidate), nunca en bucle continuo.
+ * Lenis suaviza el scroll nativo → la cámara hereda ese suavizado gratis.
+ * Además gira el nudo según el progreso (vida sutil, sin bucle continuo).
  */
-function Rig() {
+function Rig({ knotRef }: { knotRef: React.RefObject<THREE.Mesh> }) {
   const { camera, invalidate } = useThree();
 
   const path = useMemo(
@@ -80,12 +82,16 @@ function Rig() {
         max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
       camera.position.copy(path.getPointAt(p));
       camera.lookAt(KNOT);
+      if (knotRef.current) {
+        knotRef.current.rotation.y = p * Math.PI * 1.4;
+        knotRef.current.rotation.x = p * Math.PI * 0.6;
+      }
       invalidate();
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [camera, invalidate, path]);
+  }, [camera, invalidate, path, knotRef]);
 
   return null;
 }
@@ -101,6 +107,35 @@ const CORDS = [
   { color: "#3F5648", seed: 1.55, opacity: 0.45 },
 ];
 
+function Scene() {
+  const knotRef = useRef<THREE.Mesh>(null);
+  return (
+    <>
+      {/* Niebla crema = color de la página: los cabos lejanos se disuelven
+          en el fondo → profundidad sin coste (basic material respeta fog). */}
+      <fog attach="fog" args={["#F4ECE0", 9, 28]} />
+
+      {CORDS.map((c, i) => (
+        <Cord
+          key={i}
+          color={c.color}
+          seed={c.seed}
+          opacity={c.opacity}
+        />
+      ))}
+
+      {/* El nudo: clímax visual del cierre. Lejos al inicio (la niebla lo
+          oculta), nítido al llegar — recompensa de "atar los cabos". */}
+      <mesh ref={knotRef} position={KNOT}>
+        <torusKnotGeometry args={[0.5, 0.17, 96, 10]} />
+        <meshBasicMaterial color="#C97B5A" transparent opacity={0.85} />
+      </mesh>
+
+      <Rig knotRef={knotRef} />
+    </>
+  );
+}
+
 export default function WorldCanvas() {
   return (
     <Canvas
@@ -110,15 +145,7 @@ export default function WorldCanvas() {
       dpr={[1, 1.5]}
       gl={{ antialias: false, alpha: true }}
     >
-      {CORDS.map((c, i) => (
-        <Cord
-          key={i}
-          color={c.color}
-          seed={c.seed}
-          opacity={c.opacity}
-        />
-      ))}
-      <Rig />
+      <Scene />
     </Canvas>
   );
 }
