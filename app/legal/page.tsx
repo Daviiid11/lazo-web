@@ -52,7 +52,7 @@ export default function LegalPage() {
       </header>
 
       <article className="px-6 md:px-10 py-12 md:py-20 max-w-3xl mx-auto">
-        <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-4">
+        <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-4">
           Información legal
         </p>
         <h1 className="font-display text-sage text-4xl md:text-6xl tracking-tighter2 leading-[1.05] mb-6">
@@ -133,7 +133,7 @@ export default function LegalPage() {
               </a>
             </dd>
           </dl>
-          <p className="text-sm text-charcoal/60 mt-4 italic">
+          <p className="text-sm text-charcoal/70 mt-4 italic">
             La identificación fiscal completa se actualizará al formalizar el alta en
             el Régimen Especial de Trabajadores Autónomos. Mientras tanto, el canal de
             contacto válido para cualquier comunicación oficial es{" "}
@@ -346,7 +346,7 @@ export default function LegalPage() {
 
         <hr className="border-sage/20 my-12" />
 
-        <p className="text-sm text-charcoal/60 italic">
+        <p className="text-sm text-charcoal/70 italic">
           Este documento se rige por la legislación española (LSSI-CE, RGPD,
           LOPDGDD). Para cualquier controversia, los juzgados competentes serán
           los del domicilio del prestador.
@@ -358,14 +358,14 @@ export default function LegalPage() {
           <div className="flex items-center gap-3">
             <LogoMark className="h-6 w-10" />
             <Wordmark className="text-xl" />
-            <span className="text-sm text-charcoal/60 ml-3">
+            <span className="text-sm text-charcoal/70 ml-3">
               Atamos los cabos sueltos de tu negocio.
             </span>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-charcoal/70">
             <Link href="/" className="hover:text-sage">Inicio</Link>
             <a href="mailto:info@lazo.agency" className="hover:text-sage">info@lazo.agency</a>
-            <span className="text-charcoal/40">© {new Date().getFullYear()} Lazo</span>
+            <span className="text-charcoal/70">© {new Date().getFullYear()} Lazo</span>
           </div>
         </div>
       </footer>

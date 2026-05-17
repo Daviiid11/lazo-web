@@ -69,7 +69,7 @@ function CtaButton({
     "inline-flex items-center gap-2 rounded-full px-7 py-4 font-medium transition-colors";
   const styles =
     variant === "primary"
-      ? "bg-terracotta text-cream hover:bg-sage"
+      ? "bg-terracotta text-charcoal hover:bg-sage hover:text-cream"
       : "text-sage border-2 border-sage/20 hover:border-sage";
   return (
     <a
@@ -87,6 +87,9 @@ function CtaButton({
 export default function Page() {
   return (
     <main className="min-h-screen">
+      <a href="#contenido" className="skip-link">
+        Saltar al contenido
+      </a>
       {/* Nav — CTA único persistente */}
       <header className="sticky top-0 z-50 bg-cream/85 backdrop-blur-sm border-b border-sage/10">
         <div className="px-6 md:px-10 py-4 flex items-center justify-between max-w-6xl mx-auto">
@@ -98,7 +101,7 @@ export default function Page() {
             href={CAL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-medium rounded-full bg-sage text-cream px-5 py-2.5 hover:bg-terracotta transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-medium rounded-full bg-sage text-cream px-5 py-2.5 hover:bg-terracotta hover:text-charcoal transition-colors"
           >
             Reservar diagnóstico
           </a>
@@ -106,14 +109,14 @@ export default function Page() {
       </header>
 
       {/* 00 — Hero */}
-      <section className="relative overflow-hidden">
+      <section id="contenido" className="relative overflow-hidden">
         {/* Fondo: fallback estático SSR (no-JS / reduced-motion) + lienzo 3D encima */}
         <div aria-hidden className="absolute inset-0 z-0">
           <LogoMark className="absolute -right-24 top-1/2 -translate-y-1/2 h-[26rem] w-auto opacity-[0.06]" />
           <HeroBackdrop />
         </div>
         <div className="relative z-10 px-6 md:px-10 pt-16 md:pt-28 pb-24 md:pb-36 max-w-5xl mx-auto">
-          <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-6">
+          <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
             Automatización con IA · Clínicas
           </p>
         <h1 className="font-display text-sage text-5xl md:text-7xl leading-[1.05] tracking-tighter2 mb-8">
@@ -139,7 +142,7 @@ export default function Page() {
             Ver de qué hablamos
           </a>
         </div>
-          <p className="mt-6 text-sm text-charcoal/60">
+          <p className="mt-6 text-sm text-charcoal/70">
             15 minutos. Sin presentación corporativa. Sin compromiso de contratar nada.
           </p>
         </div>
@@ -149,7 +152,7 @@ export default function Page() {
       <section id="fuga" className="bg-cream-light py-20 md:py-28 px-6 md:px-10">
         <div className="max-w-5xl mx-auto">
           <Reveal>
-            <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-4">
+            <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-4">
               El problema
             </p>
             <h2 className="font-display text-sage text-3xl md:text-5xl tracking-tighter2 mb-6 max-w-3xl">
@@ -184,7 +187,7 @@ export default function Page() {
       <section className="py-20 md:py-32 px-6 md:px-10">
         <div className="max-w-5xl mx-auto">
           <Reveal>
-            <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-4">
+            <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-4">
               El primer paso
             </p>
             <h2 className="font-display text-sage text-3xl md:text-5xl tracking-tighter2 mb-6 max-w-3xl">
@@ -231,7 +234,7 @@ export default function Page() {
       <section className="bg-sage text-cream py-20 md:py-28 px-6 md:px-10">
         <div className="max-w-5xl mx-auto">
           <Reveal>
-            <p className="font-sans text-sm uppercase tracking-widest text-cream/60 mb-4">
+            <p className="font-sans text-sm uppercase tracking-widest text-cream/80 mb-4">
               Y luego
             </p>
             <h2 className="font-display text-3xl md:text-5xl tracking-tighter2 mb-6 max-w-3xl">
@@ -275,7 +278,7 @@ export default function Page() {
       <section className="py-20 md:py-28 px-6 md:px-10">
         <div className="max-w-5xl mx-auto">
           <Reveal>
-            <p className="font-sans text-sm uppercase tracking-widest text-sage/70 mb-4">
+            <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-4">
               Por qué creernos
             </p>
             <h2 className="font-display text-sage text-3xl md:text-5xl tracking-tighter2 mb-6 max-w-3xl">
@@ -286,7 +289,7 @@ export default function Page() {
               nosotros. Si así cuidamos nuestra propia casa, hazte una idea de
               cómo cuidaremos tu sistema.
             </p>
-            <div className="flex flex-wrap items-center gap-x-10 gap-y-4 text-charcoal/55 font-display text-xl md:text-2xl mb-6">
+            <div className="flex flex-wrap items-center gap-x-10 gap-y-4 text-charcoal/70 font-display text-xl md:text-2xl mb-6">
               <span>Claude</span>
               <span className="text-terracotta">·</span>
               <span>n8n</span>
@@ -297,7 +300,7 @@ export default function Page() {
               <span className="text-terracotta">·</span>
               <span>Tu software</span>
             </div>
-            <p className="text-sm text-charcoal/60 max-w-2xl">
+            <p className="text-sm text-charcoal/70 max-w-2xl">
               Datos en servidores europeos. Tu software no se toca: nos
               integramos por API. Sin lock-in: si te vas, te llevas tus datos.
             </p>
@@ -317,7 +320,7 @@ export default function Page() {
               diagnóstico. Si no encaja, te lo decimos en la misma llamada.
             </p>
             <CtaButton className="text-lg px-8">Reservar diagnóstico</CtaButton>
-            <p className="mt-6 text-sm text-charcoal/60">
+            <p className="mt-6 text-sm text-charcoal/70">
               o escribe a{" "}
               <a
                 href="mailto:hola@lazo.agency"
@@ -336,7 +339,7 @@ export default function Page() {
           <div className="flex items-center gap-3">
             <LogoMark className="h-6 w-10" />
             <Wordmark className="text-xl" />
-            <span className="text-sm text-charcoal/60 ml-3">
+            <span className="text-sm text-charcoal/70 ml-3">
               Atamos los cabos sueltos de tu negocio.
             </span>
           </div>
@@ -347,7 +350,7 @@ export default function Page() {
             <Link href="/legal" className="hover:text-sage">
               Aviso legal y privacidad
             </Link>
-            <span className="text-charcoal/40">
+            <span className="text-charcoal/70">
               © {new Date().getFullYear()} Lazo
             </span>
           </div>

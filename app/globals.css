@@ -17,3 +17,27 @@ html, body {
   background: #C97B5A;
   color: #F4ECE0;
 }
+
+/* Foco visible para navegación por teclado (no se elimina nunca el outline). */
+:focus-visible {
+  outline: 2px solid #3F5648;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Salto al contenido: oculto hasta recibir foco por teclado. */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 100;
+  background: #3F5648;
+  color: #F4ECE0;
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  font-size: 0.875rem;
+  transition: top 0.15s ease;
+}
+.skip-link:focus {
+  top: 0;
+}

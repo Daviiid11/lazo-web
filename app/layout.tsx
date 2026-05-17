@@ -20,24 +20,25 @@ const SITE_URL = "https://lazo.agency";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Lazo — Atamos los cabos sueltos de tu negocio",
+  title: "Lazo — Automatización con IA para clínicas",
   description:
-    "Automatización con IA para clínicas, despachos e inmobiliarias. Conectamos lo que tu negocio ya tiene — sin migrar de herramientas. En 30 días, funcionando.",
+    "Tu clínica pierde pacientes que nunca llegas a ver: llamadas sin devolver, WhatsApp que se enfría, citas sin confirmar. Medimos cuánto te cuesta con el Diagnóstico de Fuga — antes de tocar nada.",
   keywords: [
-    "automatización IA",
+    "automatización IA clínicas",
     "agencia IA España",
-    "WhatsApp automatización",
-    "clínicas estética",
-    "despachos abogados",
-    "inmobiliarias",
+    "WhatsApp automatización clínicas",
+    "no-show clínicas",
+    "recuperar leads clínica",
+    "agenda clínica automática",
     "n8n",
     "Claude",
   ],
   authors: [{ name: "Lazo" }],
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Lazo — Atamos los cabos sueltos de tu negocio",
+    title: "Lazo — Atamos los cabos sueltos de tu clínica",
     description:
-      "Automatización con IA para clínicas, despachos e inmobiliarias. En 30 días, funcionando.",
+      "Cada llamada sin devolver y cada cita sin confirmar es un cabo suelto. Te decimos cuánto te cuesta antes de tocar nada.",
     url: SITE_URL,
     siteName: "Lazo",
     locale: "es_ES",
@@ -45,9 +46,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lazo — Atamos los cabos sueltos de tu negocio",
+    title: "Lazo — Atamos los cabos sueltos de tu clínica",
     description:
-      "Automatización con IA para clínicas, despachos e inmobiliarias.",
+      "Automatización con IA para clínicas. Empezamos por el Diagnóstico de Fuga.",
   },
   icons: {
     icon: "/favicon.svg",
