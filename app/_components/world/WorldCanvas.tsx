@@ -5,18 +5,21 @@ import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 /* ---------------------------------------------------------------------
-   Campo de hebras abstracto (no un lazo literal — eso parecía amateur,
-   Causa 4). Cada hebra interpola entre TEJIDO (banda ordenada, c=1) y
-   DISPERSO (vaga suelta, c=0). c lo da la coreografía `tieAt` según el
-   scroll. Generativo = intencionado; lo abstracto esconde la baja
-   fidelidad. Precomputado + swap por índice → coste de scroll ≈ 0.
+   Campo de hebras abstracto. Cada hebra interpola entre TEJIDO (banda
+   ordenada, c=1) y DISPERSO (vaga suelta, c=0). c lo da la coreografía
+   `tieAt` según el scroll.
+
+   FLUIDEZ: se precomputan FRAMES fotogramas y, en cada scroll, se
+   INTERPOLA el buffer de posiciones entre los dos contiguos (lerp
+   plano del Float32Array — NO se reconstruye TubeGeometry, que era lo
+   caro). Movimiento continuo de verdad, coste de scroll mínimo.
 --------------------------------------------------------------------- */
 
 const N = 5; // nº de hebras
-const FRAMES = 20; // fotogramas de coherencia (0→1): + = más fluido
-const SAMPLES = 14; // puntos de control por hebra (curva larga y suave)
+const FRAMES = 14; // fotogramas clave (se tweenean → bastan pocos)
+const SAMPLES = 14; // puntos de control por hebra
 const SPAN = 15; // longitud que cruza la escena
-const TUBE_SEG = 20; // bajado para financiar más FRAMES sin tocar el gate
+const TUBE_SEG = 24;
 const RADIAL = 5;
 const PI = Math.PI;
 
@@ -81,11 +84,11 @@ function tieAt(p: number) {
 }
 
 function Rig({
-  meshes,
   frames,
+  lives,
 }: {
-  meshes: React.MutableRefObject<THREE.Mesh[]>;
   frames: THREE.TubeGeometry[][];
+  lives: THREE.BufferGeometry[];
 }) {
   const { camera, invalidate } = useThree();
 
@@ -99,7 +102,6 @@ function Rig({
       ]),
     []
   );
-  const last = useRef(-1);
 
   useEffect(() => {
     const onScroll = () => {
@@ -107,31 +109,48 @@ function Rig({
         document.documentElement.scrollHeight - window.innerHeight;
       const p =
         max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+
       camera.position.copy(path.getPointAt(p));
       camera.lookAt(0, 0, -4);
-      const idx = Math.round(tieAt(p) * (FRAMES - 1));
-      if (idx !== last.current) {
-        last.current = idx;
-        for (let i = 0; i < meshes.current.length; i++) {
-          const m = meshes.current[i];
-          if (m) m.geometry = frames[i][idx];
+
+      // Interpolación CONTINUA entre los dos fotogramas contiguos.
+      const s = tieAt(p) * (FRAMES - 1);
+      const lo = Math.floor(s);
+      const hi = Math.min(lo + 1, FRAMES - 1);
+      const f = s - lo;
+      for (let i = 0; i < lives.length; i++) {
+        const a = frames[i][lo].attributes.position
+          .array as Float32Array;
+        const b = frames[i][hi].attributes.position
+          .array as Float32Array;
+        const out = lives[i].attributes.position
+          .array as Float32Array;
+        for (let k = 0; k < out.length; k++) {
+          out[k] = a[k] + (b[k] - a[k]) * f;
         }
+        lives[i].attributes.position.needsUpdate = true;
       }
       invalidate();
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [camera, invalidate, path, meshes, frames]);
+  }, [camera, invalidate, path, frames, lives]);
 
   return null;
 }
 
 function FlowField() {
-  const meshes = useRef<THREE.Mesh[]>([]);
   const frames = useMemo(
     () => Array.from({ length: N }, (_, i) => buildCord(i)),
     []
+  );
+  // Geometría "viva" por hebra: arranca en TEJIDO (hero) y se muta por
+  // lerp en cada scroll. Topología idéntica entre fotogramas → basta
+  // interpolar el atributo position (basic material ignora normales).
+  const lives = useMemo(
+    () => frames.map((f) => f[FRAMES - 1].clone()),
+    [frames]
   );
   // Paleta CERRADA: solo terracota y sage, alternadas.
   const colors = ["#C97B5A", "#3F5648"];
@@ -142,14 +161,8 @@ function FlowField() {
           profundidad sin coste (basic material respeta fog). */}
       <fog attach="fog" args={["#F4ECE0", 7, 24]} />
 
-      {frames.map((f, i) => (
-        <mesh
-          key={i}
-          ref={(m) => {
-            if (m) meshes.current[i] = m;
-          }}
-          geometry={f[FRAMES - 1]}
-        >
+      {lives.map((g, i) => (
+        <mesh key={i} geometry={g} frustumCulled={false}>
           <meshBasicMaterial
             color={colors[i % 2]}
             transparent
@@ -158,7 +171,7 @@ function FlowField() {
         </mesh>
       ))}
 
-      <Rig meshes={meshes} frames={frames} />
+      <Rig frames={frames} lives={lives} />
     </>
   );
 }
