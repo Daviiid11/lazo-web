@@ -67,60 +67,107 @@ const CORDS = [
    Se precomputan FRAMES fotogramas (desatado→atado) UNA vez y se
    intercambia la geometría por índice → coste de scroll ≈ 0. */
 
-// Hebra naranja: lazada izquierda + cola derecha.
+// 3 poses por hebra. La cola va primero, recorre la lazada y vuelve al
+// centro: así el desatado se lee (la lazada se abre antes de soltarse).
+
+// ATADO — hebra naranja: lazada izquierda nítida + cola derecha colgando.
 const TIED_A = [
-  V(0, -0.05, 0),
-  V(-1.5, 0.95, 0.25),
-  V(-2.15, 0.05, -0.2),
-  V(-1.4, -0.85, 0.25),
-  V(-0.05, 0, 0),
-  V(0.6, -0.85, 0.2),
-  V(1.0, -1.7, -0.05),
-  V(1.15, -2.5, 0),
+  V(1.55, -2.35, 0.0), // fin de cola
+  V(1.35, -1.45, -0.05),
+  V(0.85, -0.55, 0.1),
+  V(-0.15, -0.05, 0.0), // centro (nudo)
+  V(-0.8, 0.95, 0.15), // sube a la lazada
+  V(-1.85, 0.55, -0.1), // exterior de la lazada
+  V(-1.55, -0.7, 0.1), // base de la lazada
+  V(-0.1, 0.0, 0.0), // cierra la lazada en el centro
 ];
-// Hebra verde: espejo (lazada derecha + cola izquierda).
+// ATADO — hebra verde: espejo (lazada derecha + cola izquierda).
 const TIED_B = [
-  V(0, -0.05, 0),
-  V(1.5, 0.95, -0.25),
-  V(2.15, 0.05, 0.2),
-  V(1.4, -0.85, -0.25),
-  V(0.05, 0, 0),
-  V(-0.6, -0.85, -0.2),
-  V(-1.0, -1.7, 0.05),
-  V(-1.15, -2.5, 0),
+  V(-1.55, -2.35, 0.0),
+  V(-1.35, -1.45, 0.05),
+  V(-0.85, -0.55, -0.1),
+  V(0.15, -0.05, 0.0),
+  V(0.8, 0.95, -0.15),
+  V(1.85, 0.55, 0.1),
+  V(1.55, -0.7, -0.1),
+  V(0.1, 0.0, 0.0),
 ];
-// Desatado: dos hebras sueltas, onduladas, separadas a lados opuestos.
+// MID — lazada abierta y elevada, aún cruzada: el instante de "soltarse".
+const MID_A = [
+  V(2.2, -2.5, -0.15),
+  V(1.8, -1.6, -0.2),
+  V(0.95, -0.7, -0.25),
+  V(-0.35, -0.1, -0.25),
+  V(-1.1, 1.35, -0.3),
+  V(-2.55, 0.75, -0.25),
+  V(-2.05, -0.95, -0.2),
+  V(-0.4, -0.1, -0.25),
+];
+const MID_B = [
+  V(-2.2, -2.5, 0.15),
+  V(-1.8, -1.6, 0.2),
+  V(-0.95, -0.7, 0.25),
+  V(0.35, -0.1, 0.25),
+  V(1.1, 1.35, 0.3),
+  V(2.55, 0.75, 0.25),
+  V(2.05, -0.95, 0.2),
+  V(0.4, -0.1, 0.25),
+];
+// DESATADO — sin lazada: dos hebras sueltas a lados opuestos (cabos).
 const UNTIED_A = [
-  V(1.2, -0.3, -0.9),
-  V(0.4, 0.4, -0.95),
-  V(-0.5, -0.2, -1.0),
-  V(-1.3, 0.5, -0.95),
-  V(-2.0, -0.1, -0.9),
-  V(-2.6, 0.4, -0.85),
-  V(-3.0, -0.2, -0.8),
-  V(-3.4, 0.1, -0.8),
+  V(1.3, -0.2, -0.95),
+  V(0.45, 0.45, -1.0),
+  V(-0.55, -0.1, -1.0),
+  V(-1.45, 0.55, -0.95),
+  V(-2.25, -0.05, -0.9),
+  V(-2.95, 0.45, -0.85),
+  V(-3.55, -0.15, -0.8),
+  V(-4.05, 0.1, -0.8),
 ];
 const UNTIED_B = [
-  V(-1.2, -0.3, 0.9),
-  V(-0.4, 0.4, 0.95),
-  V(0.5, -0.2, 1.0),
-  V(1.3, 0.5, 0.95),
-  V(2.0, -0.1, 0.9),
-  V(2.6, 0.4, 0.85),
-  V(3.0, -0.2, 0.8),
-  V(3.4, 0.1, 0.8),
+  V(-1.3, -0.2, 0.95),
+  V(-0.45, 0.45, 1.0),
+  V(0.55, -0.1, 1.0),
+  V(1.45, 0.55, 0.95),
+  V(2.25, -0.05, 0.9),
+  V(2.95, 0.45, 0.85),
+  V(3.55, -0.15, 0.8),
+  V(4.05, 0.1, 0.8),
 ];
 
-// 16 fotogramas: suficiente para leer el atado/desatado y la mitad de
-// trabajo en el montaje que con 28 → recupera margen de Lighthouse.
-const FRAMES = 16;
+// 22 fotogramas sobre 3 poses (atado→lazada abierta→desatado): morph
+// legible sin reconstruir geometría en scroll. Queda margen Lighthouse.
+const FRAMES = 22;
 
-function buildFrames(untied: THREE.Vector3[], tied: THREE.Vector3[]) {
-  return Array.from({ length: FRAMES }, (_, j) => {
-    const k = j / (FRAMES - 1); // 0 = desatado · 1 = atado
-    const pts = untied.map((u, i) =>
-      new THREE.Vector3().lerpVectors(u, tied[i], k)
+// t: 1 = atado · 0.5 = lazada abierta (mid) · 0 = desatado.
+// Pasar por la pose intermedia hace legible el atar/desatar (la lazada
+// se abre antes de que las hebras se separen, y a la inversa).
+function poseAt(
+  untied: THREE.Vector3[],
+  mid: THREE.Vector3[],
+  tied: THREE.Vector3[],
+  t: number
+) {
+  if (t >= 0.5) {
+    const u = smoothstep((t - 0.5) / 0.5);
+    return mid.map((m, i) =>
+      new THREE.Vector3().lerpVectors(m, tied[i], u)
     );
+  }
+  const u = smoothstep(t / 0.5);
+  return untied.map((un, i) =>
+    new THREE.Vector3().lerpVectors(un, mid[i], u)
+  );
+}
+
+function buildFrames(
+  untied: THREE.Vector3[],
+  mid: THREE.Vector3[],
+  tied: THREE.Vector3[]
+) {
+  return Array.from({ length: FRAMES }, (_, j) => {
+    const t = j / (FRAMES - 1); // 0 = desatado · 1 = atado
+    const pts = poseAt(untied, mid, tied, t);
     return new THREE.TubeGeometry(
       new THREE.CatmullRomCurve3(pts),
       32,
@@ -196,8 +243,14 @@ function Rig({
 function Scene() {
   const aRef = useRef<THREE.Mesh>(null);
   const bRef = useRef<THREE.Mesh>(null);
-  const framesA = useMemo(() => buildFrames(UNTIED_A, TIED_A), []);
-  const framesB = useMemo(() => buildFrames(UNTIED_B, TIED_B), []);
+  const framesA = useMemo(
+    () => buildFrames(UNTIED_A, MID_A, TIED_A),
+    []
+  );
+  const framesB = useMemo(
+    () => buildFrames(UNTIED_B, MID_B, TIED_B),
+    []
+  );
 
   return (
     <>
@@ -220,14 +273,14 @@ function Scene() {
           <meshBasicMaterial
             color="#C97B5A"
             transparent
-            opacity={0.88}
+            opacity={0.4}
           />
         </mesh>
         <mesh ref={bRef} geometry={framesB[FRAMES - 1]}>
           <meshBasicMaterial
             color="#3F5648"
             transparent
-            opacity={0.88}
+            opacity={0.4}
           />
         </mesh>
       </group>
