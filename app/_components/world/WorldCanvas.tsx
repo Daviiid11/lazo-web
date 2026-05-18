@@ -139,9 +139,32 @@ const UNTIED_B = [
 // legible sin reconstruir geometría en scroll. Queda margen Lighthouse.
 const FRAMES = 22;
 
+// SPREAD: cuánto se escalona el movimiento a lo largo de la hebra. La
+// transición "viaja" por la cuerda (no todo a la vez) → se lee como
+// tirar de un cabo, no como una deformación en bloque.
+const SPREAD = 0.6;
+
+// Interpola from→to con un retardo por punto. El índice 0 es el extremo
+// libre de la cola. leadFromTail: la cola se mueve primero y la lazada
+// después (tirar para desatar); si no, al revés (rehacer y tensar).
+function phased(
+  from: THREE.Vector3[],
+  to: THREE.Vector3[],
+  u: number,
+  leadFromTail: boolean
+) {
+  const N = from.length;
+  return from.map((f, i) => {
+    const idx = leadFromTail ? i : N - 1 - i;
+    const phase = (idx / (N - 1)) * SPREAD;
+    const local = smoothstep(
+      Math.min(1, Math.max(0, u * (1 + SPREAD) - phase))
+    );
+    return new THREE.Vector3().lerpVectors(f, to[i], local);
+  });
+}
+
 // t: 1 = atado · 0.5 = lazada abierta (mid) · 0 = desatado.
-// Pasar por la pose intermedia hace legible el atar/desatar (la lazada
-// se abre antes de que las hebras se separen, y a la inversa).
 function poseAt(
   untied: THREE.Vector3[],
   mid: THREE.Vector3[],
@@ -149,15 +172,12 @@ function poseAt(
   t: number
 ) {
   if (t >= 0.5) {
-    const u = smoothstep((t - 0.5) / 0.5);
-    return mid.map((m, i) =>
-      new THREE.Vector3().lerpVectors(m, tied[i], u)
-    );
+    // MID → ATADO: la lazada se rehace primero, la cola se tensa al final.
+    return phased(mid, tied, (t - 0.5) / 0.5, false);
   }
-  const u = smoothstep(t / 0.5);
-  return untied.map((un, i) =>
-    new THREE.Vector3().lerpVectors(un, mid[i], u)
-  );
+  // MID → DESATADO (al bajar t): la cola sale primero, la lazada se abre
+  // y colapsa después.
+  return phased(mid, untied, 1 - t / 0.5, true);
 }
 
 function buildFrames(
