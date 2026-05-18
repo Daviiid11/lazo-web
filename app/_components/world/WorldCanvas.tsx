@@ -203,11 +203,27 @@ function smoothstep(t: number) {
   return c * c * (3 - 2 * c);
 }
 
-// 1 (atado, hero) → 0 (desatado, 'la fuga') → 1 (re-atado, cierre).
+// Rampa 0→1 en `steps` peldaños: sube y se asienta, sube y se asienta.
+// Cada peldaño se lee como "un problema resuelto / un trozo instalado".
+function stepped(x: number, steps: number) {
+  const c = Math.min(1, Math.max(0, x));
+  const s = c * steps;
+  const i = Math.floor(s);
+  const f = s - i;
+  // 65% del tramo = subida suave, 35% = meseta (el paso "se asienta").
+  const rise = smoothstep(Math.min(1, f / 0.65));
+  return Math.min(1, (i + rise) / steps);
+}
+
+// Coreografía atada al relato (6 estaciones en p = 0 .2 .4 .6 .8 1):
+//  Hero: atado · La fuga→Diagnóstico: se deshace (el problema aflora) ·
+//  Automatización→Prueba: se RE-ATA POR PASOS (vamos solucionando e
+//  instalando el servicio) · Cierre: atado y asentado.
 function tieAt(p: number) {
-  if (p <= 0.3) return 1 - smoothstep(p / 0.3);
-  if (p < 0.68) return 0;
-  return smoothstep((p - 0.68) / 0.32);
+  if (p <= 0.06) return 1; // Hero: atado
+  if (p < 0.4) return 1 - smoothstep((p - 0.06) / 0.34); // 1 → 0
+  if (p < 0.92) return stepped((p - 0.4) / 0.52, 4); // 0 → 1 por pasos
+  return 1; // Cierre: atado
 }
 
 function Rig({
