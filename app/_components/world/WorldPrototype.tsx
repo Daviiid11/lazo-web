@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { Component, useEffect, useState, type ReactNode } from "react";
 import SmoothScroll from "../SmoothScroll";
 import Reveal from "../Reveal";
 
@@ -9,6 +9,21 @@ import Reveal from "../Reveal";
 const WorldCanvas = dynamic(() => import("./WorldCanvas"), { ssr: false });
 
 const CAL_URL = "https://cal.eu/lazo-agency/15min";
+
+// Si el 3D peta (WebGL ausente, fallo de three), no tumba la página: el
+// copy en z-10 sigue legible = la v2 lineal. Hardening L4 (Causa 6).
+class CanvasBoundary extends Component<
+  { children: ReactNode },
+  { fail: boolean }
+> {
+  state = { fail: false };
+  static getDerivedStateFromError() {
+    return { fail: true };
+  }
+  render() {
+    return this.state.fail ? null : this.props.children;
+  }
+}
 
 // Marca cerrada: el punto de "lazo." en terracota es el sello de la v2.
 function Wordmark({ className = "" }: { className?: string }) {
@@ -58,6 +73,10 @@ export default function WorldPrototype() {
   return (
     <SmoothScroll>
       <main className="relative bg-cream text-charcoal">
+        <a href="#contenido" className="skip-link">
+          Saltar al contenido
+        </a>
+
         {/* Marca fija — sin esto /lab parece una demo, no Lazo */}
         <header className="fixed top-0 left-0 z-20 px-6 md:px-10 py-6">
           <Wordmark className="text-2xl" />
@@ -65,13 +84,18 @@ export default function WorldPrototype() {
 
         {enabled && (
           <div className="fixed inset-0 z-0" aria-hidden>
-            <WorldCanvas />
+            <CanvasBoundary>
+              <WorldCanvas />
+            </CanvasBoundary>
           </div>
         )}
 
         <div className="relative z-10">
           {/* 1 — Hero */}
-          <section className="min-h-screen flex items-center">
+          <section
+            id="contenido"
+            className="min-h-screen flex items-center"
+          >
             <div className="px-6 md:px-10 max-w-4xl mx-auto w-full">
               <Reveal>
                 <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
