@@ -12,11 +12,11 @@ import * as THREE from "three";
    fidelidad. Precomputado + swap por índice → coste de scroll ≈ 0.
 --------------------------------------------------------------------- */
 
-const N = 6; // nº de hebras
-const FRAMES = 12; // fotogramas de coherencia (0→1)
+const N = 5; // nº de hebras
+const FRAMES = 20; // fotogramas de coherencia (0→1): + = más fluido
 const SAMPLES = 14; // puntos de control por hebra (curva larga y suave)
 const SPAN = 15; // longitud que cruza la escena
-const TUBE_SEG = 28;
+const TUBE_SEG = 20; // bajado para financiar más FRAMES sin tocar el gate
 const RADIAL = 5;
 const PI = Math.PI;
 
@@ -153,7 +153,7 @@ function FlowField() {
           <meshBasicMaterial
             color={colors[i % 2]}
             transparent
-            opacity={0.42}
+            opacity={0.3}
           />
         </mesh>
       ))}
