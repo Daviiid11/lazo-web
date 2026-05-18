@@ -1,7 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Component, useEffect, useState, type ReactNode } from "react";
+import {
+  Component,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import SmoothScroll from "../SmoothScroll";
 import Reveal from "../Reveal";
 
@@ -36,16 +42,36 @@ function Wordmark({ className = "" }: { className?: string }) {
   );
 }
 
+// Eyebrow editorial: número de estación + filete terracota + etiqueta.
+// Da sensación de recorrido cuidado (lo "moderno" que pedía David) a
+// coste 0 — sin colores nuevos, marca cerrada.
+function Eyebrow({
+  index,
+  children,
+}: {
+  index: string;
+  children: ReactNode;
+}) {
+  return (
+    <p className="flex items-center gap-3 font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
+      <span className="text-terracotta tabular-nums">{index}</span>
+      <span className="h-px w-8 bg-terracotta/60" aria-hidden />
+      <span>{children}</span>
+    </p>
+  );
+}
+
 /**
- * "El recorrido del cabo" — L3: marca + pulido sobre las 6 estaciones de L2.
- * Cada estación se entiende fuga→diagnóstico→CTA SOLO deslizando, sin
- * explorar nada (regla M-B Parte 2). El 3D es atmósfera detrás del copy HTML.
- * Si prefers-reduced-motion: no se monta el 3D, Lenis/Reveal no se activan
- * (cortan solos) y queda la v2 lineal completa — nunca una página vacía.
+ * "El recorrido del cabo". Cada estación se entiende fuga→diagnóstico→CTA
+ * SOLO deslizando, sin explorar nada (regla M-B Parte 2). El 3D es
+ * atmósfera detrás del copy HTML. Si prefers-reduced-motion: no se monta
+ * el 3D, Lenis/Reveal no se activan (cortan solos) y queda la v2 lineal
+ * completa — nunca una página vacía.
  */
 export default function WorldPrototype() {
   const [enabled, setEnabled] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reduce = window.matchMedia(
@@ -61,11 +87,19 @@ export default function WorldPrototype() {
     };
   }, []);
 
-  // Oculta la pista "desliza" en cuanto el usuario se mueve.
+  // Un solo listener: oculta la pista "desliza" y mueve la barra de
+  // progreso de forma IMPERATIVA (sin re-render → no roza el perf 88).
   useEffect(() => {
     const onScroll = () => {
       if (window.scrollY > 40) setScrolled(true);
+      const max =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+      if (barRef.current) {
+        barRef.current.style.transform = `scaleX(${p})`;
+      }
     };
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -76,6 +110,17 @@ export default function WorldPrototype() {
         <a href="#contenido" className="skip-link">
           Saltar al contenido
         </a>
+
+        {/* Barra de progreso del recorrido */}
+        <div
+          className="fixed top-0 left-0 right-0 z-30 h-[3px]"
+          aria-hidden
+        >
+          <div
+            ref={barRef}
+            className="h-full bg-terracotta origin-left scale-x-0"
+          />
+        </div>
 
         {/* Marca fija — sin esto /lab parece una demo, no Lazo */}
         <header className="fixed top-0 left-0 z-20 px-6 md:px-10 py-6">
@@ -98,9 +143,9 @@ export default function WorldPrototype() {
           >
             <div className="px-6 md:px-10 max-w-4xl mx-auto w-full">
               <Reveal>
-                <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
+                <Eyebrow index="01">
                   Automatización con IA · Clínicas
-                </p>
+                </Eyebrow>
                 <h1 className="font-display text-sage text-4xl sm:text-5xl md:text-7xl leading-[1.05] tracking-tighter2 mb-8">
                   Tu clínica pierde pacientes
                   <br />
@@ -109,7 +154,8 @@ export default function WorldPrototype() {
                   </span>
                 </h1>
                 <p className="font-sans text-lg md:text-xl text-charcoal/80 max-w-2xl leading-relaxed">
-                  Desliza: cada cabo suelto es una fuga. Vamos a atarlos.
+                  Cada cabo suelto es una fuga de pacientes. Vamos a
+                  atarlos.
                 </p>
               </Reveal>
             </div>
@@ -131,16 +177,14 @@ export default function WorldPrototype() {
           <section className="min-h-screen flex items-center">
             <div className="px-6 md:px-10 max-w-4xl mx-auto w-full">
               <Reveal>
-                <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
-                  La fuga
-                </p>
+                <Eyebrow index="02">La fuga</Eyebrow>
                 <h2 className="font-display text-sage text-3xl sm:text-4xl md:text-5xl tracking-tighter2 leading-[1.1] mb-6">
-                  Llamadas sin contestar. Recordatorios que no salen. Huecos
-                  que nadie rellena.
+                  La llamada que entró en plena consulta. El presupuesto
+                  que nadie siguió. El hueco que quedó vacío.
                 </h2>
                 <p className="text-lg md:text-xl text-charcoal/80 max-w-2xl leading-relaxed">
-                  Cada cabo suelto es un paciente que se va sin aparecer en
-                  ninguna métrica. No lo ves porque nunca llegó a entrar.
+                  Cada cabo suelto es un paciente que se va — y no aparece
+                  en ningún informe, porque nunca llegó a ser una cita.
                 </p>
               </Reveal>
             </div>
@@ -150,15 +194,15 @@ export default function WorldPrototype() {
           <section className="min-h-screen flex items-center">
             <div className="px-6 md:px-10 max-w-4xl mx-auto w-full">
               <Reveal>
-                <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
-                  El diagnóstico
-                </p>
+                <Eyebrow index="03">El diagnóstico</Eyebrow>
                 <h2 className="font-display text-sage text-4xl sm:text-5xl md:text-6xl tracking-tighter2 leading-[1.1] mb-6">
-                  No lo tapes a ciegas. Primero, el Diagnóstico de Fuga.
+                  No tapes la fuga a ciegas. Empieza por el Diagnóstico de
+                  Fuga.
                 </h2>
                 <p className="text-lg md:text-xl text-charcoal/80 max-w-2xl leading-relaxed">
-                  Medimos tus fugas con datos reales de tu clínica — no con
-                  medias del sector. Sabrás cuánto pierdes antes de tocar nada.
+                  Medimos por dónde pierde pacientes tu clínica con tus
+                  datos reales, no con medias del sector. Sabrás cuánto se
+                  escapa antes de cambiar nada.
                 </p>
               </Reveal>
             </div>
@@ -168,16 +212,15 @@ export default function WorldPrototype() {
           <section className="min-h-screen flex items-center">
             <div className="px-6 md:px-10 max-w-4xl mx-auto w-full">
               <Reveal>
-                <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
-                  La automatización
-                </p>
+                <Eyebrow index="04">La automatización</Eyebrow>
                 <h2 className="font-display text-sage text-3xl sm:text-4xl md:text-5xl tracking-tighter2 leading-[1.1] mb-6">
-                  Después, atamos los cabos uno a uno.
+                  Después atamos cada cabo, uno a uno.
                 </h2>
                 <p className="text-lg md:text-xl text-charcoal/80 max-w-2xl leading-relaxed">
-                  Recordatorios, recuperación de huecos, respuesta a primera
-                  hora — con IA, integrado con lo que ya usas. Sin cambiar tu
-                  forma de trabajar.
+                  Confirmación de citas, recuperación de huecos, respuesta
+                  inmediata fuera de horario. Con IA, sobre las
+                  herramientas que ya usas — sin cambiar cómo trabaja tu
+                  equipo.
                 </p>
               </Reveal>
             </div>
@@ -187,15 +230,14 @@ export default function WorldPrototype() {
           <section className="min-h-screen flex items-center">
             <div className="px-6 md:px-10 max-w-4xl mx-auto w-full">
               <Reveal>
-                <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
-                  La prueba
-                </p>
+                <Eyebrow index="05">La prueba</Eyebrow>
                 <h2 className="font-display text-sage text-4xl sm:text-5xl md:text-6xl tracking-tighter2 leading-[1.1] mb-6">
-                  Esta web es la demostración.
+                  ¿Sabemos hacerlo? Estás dentro de un ejemplo.
                 </h2>
                 <p className="text-lg md:text-xl text-charcoal/80 max-w-2xl leading-relaxed">
-                  Si dudas de que sepamos automatizar, mira dónde estás leyendo
-                  esto. La capacidad se enseña, no se cuenta.
+                  Esta web la hemos construido nosotros, de cero. La
+                  capacidad no se cuenta: se enseña. Lo siguiente que te
+                  enseñamos es tu propia fuga.
                 </p>
               </Reveal>
             </div>
@@ -205,9 +247,7 @@ export default function WorldPrototype() {
           <section className="min-h-screen flex flex-col justify-center">
             <div className="px-6 md:px-10 max-w-4xl mx-auto w-full">
               <Reveal>
-                <p className="font-sans text-sm uppercase tracking-widest text-sage/90 mb-6">
-                  El cierre
-                </p>
+                <Eyebrow index="06">El cierre</Eyebrow>
                 <h2 className="font-display text-sage text-4xl sm:text-5xl md:text-7xl tracking-tighter2 leading-[1.05] mb-8">
                   ¿Cuánto pierde tu clínica ahora mismo?
                 </h2>
@@ -220,6 +260,10 @@ export default function WorldPrototype() {
                   Reservar diagnóstico de fuga
                   <span aria-hidden>→</span>
                 </a>
+                <p className="mt-6 font-sans text-sm text-charcoal/70">
+                  30 minutos · sin compromiso · te vas con tu cifra de
+                  fuga.
+                </p>
               </Reveal>
             </div>
 
