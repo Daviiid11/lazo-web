@@ -4,6 +4,20 @@
 
 :root {
   color-scheme: light;
+
+  /* Tokens de color (única fuente de verdad). Si Tailwind aún usa hex
+     en tailwind.config.ts es por compatibilidad; los componentes nuevos
+     consumen estas variables vía _lib/tokens.ts o clases utilitarias. */
+  --crema: #F4ECE0;
+  --crema-light: #FAF6EE;
+  --sage: #3F5648;
+  --terracota: #C97B5A;
+  --carbon: #1F1F1F;
+
+  /* Tokens de motion (vocabulario único de movimiento). */
+  --ease-calm: cubic-bezier(.2, .8, .2, 1);
+  --dur-fast: 220ms;
+  --dur-slow: 720ms;
 }
 
 html, body {
@@ -40,4 +54,16 @@ html, body {
 }
 .skip-link:focus {
   top: 0;
+}
+
+/* Reduced-motion: cortar transiciones y animaciones a nivel global.
+   GSAP/Lenis ya lo respetan en JS; este media query cubre el CSS puro
+   (ProgressBar, StickyCTAMobile, hover, etc.). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

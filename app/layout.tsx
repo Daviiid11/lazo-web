@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import SmoothScroll from "./_components/SmoothScroll";
+import Wordmark from "./_components/layout/Wordmark";
+import ProgressBar from "./_components/layout/ProgressBar";
+import StickyCTAMobile from "./_components/conversion/StickyCTAMobile";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -20,25 +24,25 @@ const SITE_URL = "https://lazo.agency";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Lazo — Automatización con IA para clínicas",
+  title: "Lazo — Atamos el teléfono de tu taller",
   description:
-    "Tu clínica pierde pacientes que nunca llegas a ver: llamadas sin devolver, WhatsApp que se enfría, citas sin confirmar. Medimos cuánto te cuesta con el Diagnóstico de Fuga — antes de tocar nada.",
+    "Cada llamada que no atiendes es un coche que no entra. Medimos cuántas pierdes y cuánto te cuestan — antes de tocar nada. Sin permanencia, sin tarifa por mirar.",
   keywords: [
-    "automatización IA clínicas",
-    "agencia IA España",
-    "WhatsApp automatización clínicas",
-    "no-show clínicas",
-    "recuperar leads clínica",
-    "agenda clínica automática",
+    "atención telefónica taller",
+    "IA llamadas taller mecánico",
+    "automatización taller",
+    "WhatsApp taller",
+    "agenda taller",
+    "leads taller",
     "n8n",
     "Claude",
   ],
   authors: [{ name: "Lazo" }],
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Lazo — Atamos los cabos sueltos de tu clínica",
+    title: "Lazo — Atamos el teléfono de tu taller",
     description:
-      "Cada llamada sin devolver y cada cita sin confirmar es un cabo suelto. Te decimos cuánto te cuesta antes de tocar nada.",
+      "Cada llamada perdida es un coche que no entra esta semana. Medimos cuántas y cuánto te cuestan, antes de tocar nada.",
     url: SITE_URL,
     siteName: "Lazo",
     locale: "es_ES",
@@ -46,13 +50,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lazo — Atamos los cabos sueltos de tu clínica",
+    title: "Lazo — Atamos el teléfono de tu taller",
     description:
-      "Automatización con IA para clínicas. Empezamos por el Diagnóstico de Fuga.",
+      "Diagnóstico de fuga primero. Decides después. Sin permanencia.",
   },
-  icons: {
-    icon: "/favicon.svg",
-  },
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({
@@ -63,7 +65,13 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="font-sans bg-cream text-charcoal antialiased">
+        <ProgressBar />
+        <div className="fixed top-5 left-4 md:left-6 z-40">
+          <Wordmark className="text-lg md:text-xl" />
+        </div>
         <SmoothScroll>{children}</SmoothScroll>
+        <StickyCTAMobile />
+        <Analytics />
       </body>
     </html>
   );
