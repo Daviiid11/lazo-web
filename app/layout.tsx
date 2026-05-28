@@ -23,25 +23,25 @@ const SITE_URL = "https://lazo.agency";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Lazo — Atamos el teléfono de tu taller",
+  title: "Lazo — IA, automatización y marketing digital en PYMES",
   description:
-    "Cada llamada que no atiendes es un coche que no entra. Medimos cuántas pierdes y cuánto te cuestan — antes de tocar nada. Sin permanencia, sin tarifa por mirar.",
+    "Implementamos IA, automatización y marketing digital en PYMES españolas. Sistemas que funcionan en tu operativa real, no en presentaciones bonitas.",
   keywords: [
-    "atención telefónica taller",
-    "IA llamadas taller mecánico",
-    "automatización taller",
-    "WhatsApp taller",
-    "agenda taller",
-    "leads taller",
+    "agencia IA PYMES",
+    "automatización PYMES España",
+    "consultoría IA empresas",
+    "funnels de venta",
+    "WhatsApp IA",
+    "Airtable",
     "n8n",
-    "Claude",
+    "ciberseguridad PYMES",
   ],
   authors: [{ name: "Lazo" }],
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Lazo — Atamos el teléfono de tu taller",
+    title: "Lazo — IA, automatización y marketing digital en PYMES",
     description:
-      "Cada llamada perdida es un coche que no entra esta semana. Medimos cuántas y cuánto te cuestan, antes de tocar nada.",
+      "Más clientes. Menos caos. Menos horas. Implementamos sistemas que funcionan en tu operativa real.",
     url: SITE_URL,
     siteName: "Lazo",
     locale: "es_ES",
@@ -49,9 +49,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lazo — Atamos el teléfono de tu taller",
+    title: "Lazo — IA, automatización y marketing digital en PYMES",
     description:
-      "Diagnóstico de fuga primero. Decides después. Sin permanencia.",
+      "Sistemas que funcionan en tu operativa real, no en presentaciones bonitas.",
   },
   icons: { icon: "/favicon.svg" },
 };

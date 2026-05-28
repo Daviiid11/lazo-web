@@ -9,7 +9,7 @@ const tones: Record<Tone, string> = {
   sage: "bg-sage text-cream",
 };
 
-export default function Acto({
+export default function Section({
   id,
   tone = "crema",
   width = "default",
