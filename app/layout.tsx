@@ -4,7 +4,6 @@ import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import SmoothScroll from "./_components/SmoothScroll";
 import Wordmark from "./_components/layout/Wordmark";
-import ProgressBar from "./_components/layout/ProgressBar";
 import StickyCTAMobile from "./_components/conversion/StickyCTAMobile";
 
 const fraunces = Fraunces({
@@ -65,7 +64,6 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="font-sans bg-cream text-charcoal antialiased">
-        <ProgressBar />
         <div className="fixed top-5 left-4 md:left-6 z-40">
           <Wordmark className="text-lg md:text-xl" />
         </div>

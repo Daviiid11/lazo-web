@@ -1,5 +1,4 @@
 import Reveal from "./_components/Reveal";
-import HeroBackdrop from "./_components/HeroBackdrop";
 import Acto from "./_components/layout/Acto";
 import Footer from "./_components/layout/Footer";
 import Container from "./_components/ui/Container";
@@ -7,8 +6,6 @@ import Eyebrow from "./_components/ui/Eyebrow";
 import Titular from "./_components/ui/Titular";
 import CTAPrimary from "./_components/conversion/CTAPrimary";
 import CTASecondary from "./_components/conversion/CTASecondary";
-import CosteCounter from "./_components/conversion/CosteCounter";
-import CredibilityProof from "./_components/conversion/CredibilityProof";
 import { ACTO_01, ACTO_02, ACTO_03, ACTO_04, ACTO_05, ACTO_06 } from "./_content/actos";
 
 export default function Page() {
@@ -18,14 +15,11 @@ export default function Page() {
         Saltar al contenido
       </a>
 
-      {/* 01 — Reconocimiento (hero con HebrasField congelado de fondo) */}
+      {/* 01 — Reconocimiento (hero) */}
       <section
         id="acto-01"
         className="relative overflow-hidden min-h-[92vh] flex items-center"
       >
-        <div aria-hidden className="absolute inset-0 z-0">
-          <HeroBackdrop />
-        </div>
         <Container className="relative z-10 pt-28 md:pt-32 pb-24 md:pb-32">
           <div id="contenido" className="max-w-3xl">
             <Eyebrow>{ACTO_01.eyebrow}</Eyebrow>
@@ -43,12 +37,11 @@ export default function Page() {
         </Container>
       </section>
 
-      {/* 02 — Cuantificación (clímax: el coste oculto + micro-CTA suave) */}
+      {/* 02 — Cuantificación */}
       <Acto id="acto-02" tone="crema-light" width="default">
         <Reveal>
           <Eyebrow>{ACTO_02.eyebrow}</Eyebrow>
           <Titular className="mt-6 mb-2 max-w-3xl">{ACTO_02.titular}</Titular>
-          <CosteCounter acto={ACTO_02} />
           {ACTO_02.cuerpo && (
             <p className="font-sans text-lg text-charcoal/80 leading-relaxed max-w-2xl">
               {ACTO_02.cuerpo}
@@ -78,7 +71,7 @@ export default function Page() {
         </Reveal>
       </Acto>
 
-      {/* 04 — Credibilidad (prueba mínima P0: 3 pasos del diagnóstico) */}
+      {/* 04 — Credibilidad */}
       <Acto id="acto-04" tone="crema" width="default">
         <Reveal>
           <Eyebrow>{ACTO_04.eyebrow}</Eyebrow>
@@ -88,11 +81,10 @@ export default function Page() {
               {ACTO_04.cuerpo}
             </p>
           )}
-          <CredibilityProof pasos={ACTO_04.pasos} />
         </Reveal>
       </Acto>
 
-      {/* 05 — Seguridad (objeción precio/permanencia explícita, H3) */}
+      {/* 05 — Seguridad */}
       <Acto id="acto-05" tone="crema-light" width="default">
         <Reveal>
           <Eyebrow>{ACTO_05.eyebrow}</Eyebrow>
