@@ -101,30 +101,32 @@ Escala modular 4/8. Ritmo generoso "una idea por pantalla". Cerrado.
 
 ---
 
-## 5. Sistema de componentes — **TBD-B4** (revisión del set)
+## 5. Sistema de componentes (post-B3, decisiones B4)
 
-El set §4 heredado del v3-lab necesita revisión bloque por bloque:
-
-| Categoría | Componente | Estado pivote | Notas |
-|-----------|-----------|---------------|-------|
-| Global | `Wordmark` | ✅ se conserva | revisar tamaño para B3 |
+| Categoría | Componente | Estado | Notas |
+|-----------|-----------|--------|-------|
+| Global | `Wordmark` | ✅ se conserva | revisar tamaño en B5 |
 | | `Footer` | ✅ se conserva | textos legales pendientes E4 |
-| Layout | `Acto` | ✅ se conserva | renombrar semántico TBD-B4 (¿`Section`?) |
+| Layout | `Acto` → **rename `Section` en B5** | ✅ se conserva | API igual (`tone`, `width`, `id`, `className`); refactor mecánico |
 | | `Container` / `Stack` | ✅ se conservan | |
-| | `ProgressBar` | ❌ a borrar B5 | atado a "6 actos" |
 | UI | `Eyebrow` | ✅ se conserva | numeración A1–A7 en B5 |
-| | `Titular` | ✅ se conserva | |
+| | `Titular` | ✅ se conserva | aceptar nuevos tokens `--fs-h1/h2/h3` |
 | Motion | `SmoothScroll` (Lenis) | ✅ | |
 | | `Reveal` (GSAP) | ✅ | |
-| | `HebrasField` / `HeroCanvas` / `world/` | ❌ a borrar B3 | Mundo 3D fuera |
-| | `HeroBackdrop` | ❌ a borrar B3 | dependía de HebrasField |
-| | `CounterAnim` | ❌ a borrar B3 | servía a CosteCounter |
-| Conversión | `CTAPrimary` | ✅ se conserva | texto pasa a "Agenda una llamada" |
+| Conversión | `CTAPrimary` | ✅ se conserva | texto pasa a "Agenda una llamada" en B5 |
 | | `CTASecondary` | ✅ se conserva | |
 | | `StickyCTAMobile` | ✅ se conserva | |
-| | `CredibilityProof` | ❌ a borrar B3 | pasos del Diagnóstico de Fuga |
-| | `CosteCounter` | ❌ a borrar B3 | Diagnóstico de Fuga |
-| Demo | `DemoFachada` | ❌ no aplica | no existe en disco; no crear |
+
+Borrados ya en B3 (commit `a71c848`): `HeroBackdrop`, `HeroCanvas`, `world/WorldCanvas`, `world/WorldPrototype`, `CounterAnim`, `CosteCounter`, `CredibilityProof`, `ProgressBar`, `app/lab/`.
+
+Componentes nuevos pendientes de crear en B5 (no antes):
+- `ServicioCard` (ui) — tarjeta para A2 con link a `/servicios/<slug>`.
+- `PrincipiosList` (ui) — lista numerada para A3 manifiesto.
+- `ParaQuienGrid` (ui) — dos columnas "es para ti / no es para ti" para A4.
+- `FasesTrabajo` (ui) — 4 fases numeradas para A5.
+- `FaqAccordion` (ui) — acordeón nativo `<details>` para A7 (sin JS).
+
+**Regla maestra:** ningún bloque introduce un componente fuera de este set sin justificación documentada.
 
 **Regla maestra:** ningún bloque introduce un patrón fuera del set actualizado.
 Si algo "pide" un componente nuevo, primero se cuestiona si el bloque sobra.
@@ -145,29 +147,33 @@ Si algo "pide" un componente nuevo, primero se cuestiona si el bloque sobra.
 
 ---
 
-## 7. Estructura de carpetas (objetivo post-pivote)
+## 7. Estructura de carpetas (objetivo post-B4)
 
 ```
 app/
-  page.tsx                 # ensambla la home con A1–A7 (B5)
-  layout.tsx               # shell: fonts, wordmark, footer, analytics
-  legal/page.tsx           # se conserva; textos a actualizar en E4
+  page.tsx                              # ensambla la home con A1–A7 (B5)
+  layout.tsx                            # shell: fonts, wordmark, footer, analytics
+  legal/page.tsx                        # se conserva; textos a actualizar en E4
+  servicios/
+    estrategia-ia/page.tsx              # B5 (página dedicada por servicio)
+    funnels/page.tsx                    # B5
+    control-automatizacion/page.tsx     # B5
+    ciberseguridad/page.tsx             # B5
   _content/
-    home.ts                # bloques A1–A7 (sustituye al viejo actos.ts)
-    site.ts                # CTA único + constantes (URL Cal.com pendiente C2)
+    home.ts                             # esquema A1–A7 (creado B4, copy en B5)
+    servicios.ts                        # esquema 4 servicios (B5)
+    site.ts                             # CTA único + constantes
   _components/
-    ui/                    # Eyebrow, Titular, Container, Stack
-    layout/                # Acto, Wordmark, Footer
-    conversion/            # CTAPrimary, CTASecondary, StickyCTAMobile
-    motion/                # SmoothScroll, Reveal
+    ui/                                 # Eyebrow, Titular, Container, Stack + B5 nuevos
+    layout/                             # Section (rename de Acto en B5), Wordmark, Footer
+    conversion/                         # CTAPrimary, CTASecondary, StickyCTAMobile
+  Reveal.tsx, SmoothScroll.tsx          # raíz de _components/, sin subcarpeta motion/
   _lib/
-    tokens.ts              # referencia de tokens en TS
-    analytics.ts           # wrapper de eventos (eventos finales en C6)
+    tokens.ts                           # referencia de tokens en TS (cerrado B3)
+    analytics.ts                        # wrapper de eventos (eventos finales en C6)
 ```
 
-> Legacy a borrar en B3: `_components/HeroBackdrop.tsx`, `HeroCanvas.tsx`,
-> `world/`, `motion/CounterAnim.tsx`, `conversion/CosteCounter.tsx`,
-> `conversion/CredibilityProof.tsx`, `layout/ProgressBar.tsx`, `app/lab/`.
+> Sin `/sobre` ni `/contacto`: "sobre" = bloque A6 de home, "contacto" = CTA Cal.com.
 
 ---
 
@@ -221,15 +227,55 @@ gusto = no, sin un dato que lo justifique.
 ## 11. Trazabilidad con método 4 fases
 
 - Bloque B web — pasos atómicos:
-  - **B1** Auditoría reuso v3-lab — ✅ completado 2026-05-28.
-  - **B2** Decisión técnica de partida (reskin sobre v3-lab, rama
-    `pivote-divisual`) — ✅ este commit.
-  - **B3** Sistema de diseño Divisual (tokens definitivos + purga 3D y
-    Diagnóstico de Fuga) — pendiente.
-  - **B4** Wireframe + arquitectura páginas.
-  - **B5** Ensamblaje home con A1–A7.
+  - **B1** Auditoría reuso v3-lab — ✅ 2026-05-28.
+  - **B2** Decisión técnica de partida (rama `pivote-divisual`) — ✅ commit `dd517db`.
+  - **B3** Tokens Divisual + purga 3D y Diagnóstico de Fuga — ✅ commit `a71c848`.
+  - **B4** Wireframe + arquitectura páginas — ✅ este commit.
+  - **B5** Ensamblaje home con A1–A7 + páginas de servicio.
   - **B6** Hardening + deploy `lazo.agency`.
 
 Cuellos de botella cruzados: **C7** (pricing) bloquea C5; **E2+E3** (contrato/DPA)
 bloquean firma cliente; **E4** cruza con B5/B6 (textos legales en la web);
 **D4** depende de B6 (Featured LinkedIn apunta a web nueva).
+
+---
+
+## 12. Mapa de páginas + wireframe home (B4, cerrado 2026-05-28)
+
+### 12.1 Mapa de páginas
+
+| Ruta | Propósito | Construye |
+|------|-----------|-----------|
+| `/` | Home larga con A1–A7 | B5 |
+| `/servicios/estrategia-ia` | Detalle servicio 1 + casos + FAQ | B5 |
+| `/servicios/funnels` | Detalle servicio 2 | B5 |
+| `/servicios/control-automatizacion` | Detalle servicio 3 | B5 |
+| `/servicios/ciberseguridad` | Detalle servicio 4 (copy conservador) | B5 |
+| `/legal` | Aviso legal + privacidad + cookies | E4 (texto), ya existe ruta |
+| `/sitemap.xml`, `/robots.txt`, `/opengraph-image` | SEO técnico | B6 (actualizar) |
+
+Sin `/sobre` ni `/contacto`.
+
+### 12.2 Wireframe textual de la home
+
+| # | Bloque | Tone | Contiene |
+|---|--------|------|----------|
+| A1 | Hero | `crema` | Eyebrow opcional + Titular (Fraunces, `--fs-h1`) + cuerpo + `CTAPrimary` "Agenda una llamada" + `CTASecondary` opcional |
+| A2 | Servicios | `crema-light` | Titular corto + grid de 4 `ServicioCard` (tarjetas breves con link a `/servicios/<slug>`) |
+| A3 | Manifiesto | **`sage`** | Eyebrow "En qué creemos" + Titular en crema + lista de 4 principios + CTA secundario opcional |
+| A4 | Para quién es Lazo | `crema` | Titular + dos columnas (es para ti / no es para ti) + ancla "200k-2M / 5-50" |
+| A5 | Cómo trabajamos | `crema-light` | Titular + 4 fases numeradas (diagnóstico → plan → implementación → acompañamiento) |
+| A6 | Sobre Lazo | **`sage`** | Eyebrow + Titular en crema + narrativa industria → IA → Lazo (mención Mastermind Juan Pe) |
+| A7 | FAQ | `crema` | Titular + acordeón nativo `<details>` con 5 preguntas (precio, plazo, datos/RGPD, Ads/redes, "si no funciona") + cierre CTA primario opcional |
+
+Patrón rítmico: claro → claro → **OSCURO** → claro → claro → **OSCURO** → claro.
+
+Footer (no es bloque): wordmark + links legales + email contacto + tagline corto.
+
+### 12.3 Esquema `_content/home.ts`
+
+Creado en B4 con tipos exportados (`Hero`, `Servicios`, `Manifiesto`, `ParaQuien`, `ComoTrabajamos`, `SobreLazo`, `Faq`, `HomeBlock`). El array `HOME_BLOCKS` queda **vacío hasta B5**, que rellena el copy real validado en sesión 2026-05-28 (ver memoria `project_lazo_pivote_divisual`).
+
+### 12.4 Decisiones de componentes nuevos (a crear en B5)
+
+`ServicioCard`, `PrincipiosList`, `ParaQuienGrid`, `FasesTrabajo`, `FaqAccordion`. Cada uno consume el subtipo correspondiente de `home.ts`. Server components por defecto; `FaqAccordion` aprovecha `<details>` nativo y no necesita JS.
