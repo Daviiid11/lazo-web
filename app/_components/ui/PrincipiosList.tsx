@@ -11,7 +11,7 @@ export default function PrincipiosList({
         <li key={p.titulo} className="grid grid-cols-[auto_1fr] gap-x-5 md:gap-x-7 items-start">
           <span
             aria-hidden
-            className="font-display text-2xl md:text-3xl text-terracotta leading-none pt-1 tabular-nums"
+            className="font-display text-2xl md:text-3xl text-cream leading-none pt-1 tabular-nums opacity-80"
           >
             {String(i + 1).padStart(2, "0")}
           </span>

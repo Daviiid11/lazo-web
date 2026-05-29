@@ -13,9 +13,9 @@ export default function ServicioCard({ card }: { card: ServicioCardType }) {
       <p className="font-sans text-base text-charcoal/80 leading-relaxed mb-5">
         {card.resumen}
       </p>
-      <span className="font-sans text-sm font-medium text-terracotta inline-flex items-center gap-2">
+      <span className="font-sans text-sm font-medium text-sage inline-flex items-center gap-2">
         Ver detalle
-        <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
+        <span aria-hidden className="text-terracotta transition-transform group-hover:translate-x-1">→</span>
       </span>
     </Link>
   );
